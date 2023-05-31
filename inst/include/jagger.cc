@@ -59,8 +59,9 @@ namespace jagger {
     }
     static inline void write_buffer (char* &p, char* buf, const size_t limit) {
       if (p - buf <= limit) return;
-      ::write (1, buf, static_cast <size_t> (p - buf));
-      p = buf;
+      // ::write (1, buf, static_cast <size_t> (p - buf));
+      // p = buf;
+      return;
     }
     template <typename T>
     static inline void write_array (T& data, const std::string& fn) {
