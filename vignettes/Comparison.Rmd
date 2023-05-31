@@ -1,0 +1,128 @@
+---
+title: "比較"
+output:
+  html_document:
+    toc: true
+---
+
+## 結論
+`tokenize()`と`tokenize_tbl()`が最速、次に`lemmatize()`と`lemmatize_tbl()`、最後に`pos_simple()`と`pos()`となっています。
+最も遅い`pos()`でも、`RMeCab`の`RMeCabC()`より高速です。
+
+`pos()`と`tokenize()`では速度に大きな差があるため、利用目的に応じて使い分けたり、[並列化](HowToUse.html#並列化)することが考えられます。
+
+## RMeCabとの比較
+`microbenchmark`パッケージを用いて、`RMeCab`との簡易的な速度比較を行います。
+```{r, warning=FALSE, message=FALSE}
+library(RcppJagger)
+library(microbenchmark)
+library(RMeCab)
+```
+
+<a href="https://github.com/koheiw/workshop-IJTA" target="_blank">『Rによる日本語のテキスト分析入門』</a>で使用されたデータを用います。
+```{r, warning=FALSE, message=FALSE}
+data <- readr::read_csv(
+  "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi_head.txt",
+  col_names = FALSE
+) |> dplyr::rename(text = X1)
+head(data)
+```
+
+分析内容が最も近い、`RcppJagger::pos_simple()`と`RMeCab::RMeCabC()`の速度を比較します。
+```{r, warning = FALSE, message = FALSE, fig.align = 'center'}
+model_path <- "/usr/local/lib/jagger/model/kwdlc"
+res1 <- microbenchmark(
+  "RcppJagger" = {
+    res <- pos_simple(data$text, model_path = model_path)
+  },
+  "RMeCab" = {
+    res <- purrr::map(data$text, RMeCabC)
+  },
+  times = 10
+)
+```
+
+```{r, echo = FALSE, message = FALSE, fig.align = 'center'}
+library(dplyr)
+format_output <- function(df) {
+  df_summarized <- df %>%
+    rename(Model = expr) %>%
+    group_by(Model) %>%
+    summarise(
+      Min = min(time) / 1e9,
+      `1st Qu.` = quantile(time, 0.25) / 1e9,
+      Mean = mean(time) / 1e9,
+      Median = median(time) / 1e9,
+      `3rd Qu.` = quantile(time, 0.75) / 1e9,
+      Max = max(time) / 1e9,
+      Count = n()
+    )
+  df_summarized$Min <- sprintf("%.2f s", df_summarized$Min)
+  df_summarized$`1st Qu.` <- sprintf("%.2f s", df_summarized$`1st Qu.`)
+  df_summarized$Mean <- sprintf("%.2f s", df_summarized$Mean)
+  df_summarized$Median <- sprintf("%.2f s", df_summarized$Median)
+  df_summarized$`3rd Qu.` <- sprintf("%.2f s", df_summarized$`3rd Qu.`)
+  df_summarized$Max <- sprintf("%.2f s", df_summarized$Max)
+
+  return(df_summarized)
+}
+calc_median_ratio <- function(df) {
+
+  df_median <- df %>%
+    group_by(expr) %>%
+    summarise(Median = median(time))
+
+  rmecab_median <- df_median[df_median$expr == "RMeCab",]$Median
+  rcppjagger_median <- df_median[df_median$expr == "RcppJagger",]$Median
+
+  median_ratio <- rmecab_median / rcppjagger_median
+
+  return(median_ratio)
+}
+median_ratio <- calc_median_ratio(res1)
+
+knitr::kable(format_output(res1))
+```
+
+中央値での比較では、`RcppJagger`の方が`RMeCab`よりも約`r round(median_ratio, 2)`倍速いことがわかります。
+実装上の工夫をすることで、更なる高速化を期待できます。
+
+
+## RcppJaggerの関数同士の比較
+RcppJaggerの関数にも速度の違いがあります。
+```{r, warning = FALSE, message = FALSE, fig.align = 'center'}
+model_path <- "/usr/local/lib/jagger/model/kwdlc"
+res2 <- microbenchmark(
+  "pos" = {
+    res <- pos(data$text, model_path = model_path)
+  },
+  "pos_simple" = {
+    res <- pos_simple(data$text, model_path = model_path)
+  },
+  "tokenize" = {
+    res <- tokenize(data$text, model_path = model_path)
+  },
+  "tokenize2" = {
+    res <- tokenize(data$text, model_path = model_path, concat = FALSE)
+  },
+  "tokenize_tbl" = {
+    res <- tokenize_tbl(data, "text", model_path = model_path)
+  },
+  "lemmatize" = {
+    res <- lemmatize(data$text, model_path = model_path)
+  },
+  "lemmatize2" = {
+    res <- lemmatize(data$text, model_path = model_path, concat = FALSE)
+  },
+  "lemmatize_tbl" = {
+    res <- lemmatize_tbl(data, "text", model_path = model_path)
+  },
+  times = 10
+)
+```
+
+```{r, echo = FALSE, message = FALSE, fig.align = 'center'}
+knitr::kable(format_output(res2) |> rename(Function = Model))
+```
+
+中央値の比較では、`tokenize()`と`lemmatize()`の方が`pos()`と`pos_simple()`よりも高速であることがわかります。

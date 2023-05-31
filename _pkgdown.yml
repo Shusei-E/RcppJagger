@@ -1,0 +1,36 @@
+destination: docs
+
+home:
+  title: An R wrapper for Jagger
+  description: >
+    RcppJagger is a wrapper for Jagger, a morphological analyzer proposed in Yoshinaga (2023).
+
+template:
+  bootswatch: spacelab
+
+authors:
+  Shusei Eshima:
+    href: "https://shusei-e.github.io"
+
+toc:
+  depth: 2
+
+navbar:
+  title: "RcppJagger"
+  left:
+    - text: "インストール"
+      href: articles/Installation.html
+    - text: "利用方法"
+      href: articles/HowToUse.html
+    - text: "比較"
+      href: articles/Comparison.html
+    - text: "関数一覧"
+      href: reference/index.html
+    - text: "更新履歴"
+      href: news/index.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/Shusei-E/RcppJagger
+
+news:
+- one_page: true

@@ -1,0 +1,73 @@
+---
+title: "インストール方法"
+output:
+  html_document:
+    toc: false
+---
+
+## Jaggerのインストール
+RcppJaggerはJaggerのラッパーのため、まずJaggerをインストールします。[公式サイト](https://www.tkl.iis.u-tokyo.ac.jp/~ynaga/jagger/index.ja.html)に従ってインストールしていきます。
+
+
+**Step 1:** ターミナルを開いて適当なフォルダに移動します。特定のフォルダに移動する場合は、`cd`コマンドを使用します。ここでは例として`Downloads`フォルダに移動する場合を示します。
+```bash
+$ cd ~/Downloads/
+```
+
+**Step 2:** <a href="https://www.tkl.iis.u-tokyo.ac.jp/~ynaga/jagger/index.ja.html" target="_blank">公式サイト</a>のコマンドを実行し、Jaggerをダウンロードします。
+```bash
+$ wget http://www.tkl.iis.u-tokyo.ac.jp/~ynaga/jagger/jagger-latest.tar.gz
+$ tar zxvf jagger-latest.tar.gz
+$ cd jagger-YYYY-MM-DD
+```
+3行目の`jagger-YYYY-MM-DD`は、最新版のJaggerのフォルダ名に置き換えてください。
+2023年5月29日現在では、`jagger-2023-02-18`となっています。
+
+
+**Step 3:**
+mecab-jumandic形式の辞書を用意します。公式サイトにある通り、<a href="https://drive.google.com/drive/folders/0B4y35FiV1wh7fjQ5SkJETEJEYzlqcUY4WUlpZmR4dDlJMWI5ZUlXN2xZN2s2b0pqT3hMbTQ" target="_blank">こちら</a>からダウンロードしてください。
+`mecab-jumandic-7.0-20130310.tar.gz`というファイル名になっています。
+
+また、助詞の文字化けを修正するために[こちら](http://www.tkl.iis.u-tokyo.ac.jp/~ynaga/jagger/mecab-jumandic-7.0-20130310.patch)から`mecab-jumandic-7.0-20130310.patch`をダウンロードします (リンクを右クリックして保存)。
+
+ダウンロードした2つのファイルを`jagger-YYYY-MM-DD`フォルダに移動し、以下のコマンドを実行します。
+```bash
+$ tar zxvf mecab-jumandic-7.0-20130310.tar.gz
+$ patch -p0 < mecab-jumandic-7.0-20130310.patch
+```
+
+**Step 4:**
+京都大学ウェブ文書リード文コーパスを用意します。
+```bash
+$ git clone https://github.com/ku-nlp/KWDLC
+$ ./configure
+```
+
+**Step 5:**
+モデルの学習とインストールを行います。
+```bash
+$ make model-benchmark && sudo make install
+```
+
+**Step 6:**
+RcppJaggerでモデルを利用するために、モデルがあるパスを確認します。
+`src/Makefile`をテキストエディタで開き、以下の2つの行を探します。
+```txt
+prefix = /usr/local
+[...]
+JAGGER_CPPFLAGS =  -DJAGGER_DEFAULT_MODEL=\"${exec_prefix}/lib/jagger/model/kwdlc\"
+```
+これらから、モデルが`/usr/local/lib/jagger/model/kwdlc`にあるとわかります。
+
+
+## RcppJaggerのインストール
+
+CRANからインストールできます。
+```{r, eval = FALSE, warning=FALSE, message=FALSE}
+install.packages("RcppJagger")
+```
+
+## mecab-ipadic-NEologd
+Jaggerはmecab-jumandic形式の辞書を利用するため、<a href="https://github.com/neologd/mecab-ipadic-neologd" target="_blank">mecab-ipadic-NEologd</a>が利用できます。
+mecab-ipadic-NEologdをインストールした後にできる、`build/`フォルダ中の`.csv`ファイルの一部又は全部を、Jaggerをインストールする際に作った`mecab-jumandic-7.0-20130310`フォルダに移動し、Step 5のモデルの学習とインストールを再度行います。
+
