@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: c(
         person("Shusei", "Eshima", email = "shuseieshima@gmail.com", role = c("aut","cre"), comment = c(ORCID = "0000-0003-3613-4046"))
     )
-Description: RcppJagger is a wrapper for Jagger, a morphological analyzer proposed in Yoshinaga (2023) <arXiv:2305.19045>.
+Description: A wrapper for Jagger, a morphological analyzer proposed in Yoshinaga (2023) <arXiv:2305.19045>.
 License: GPL-2
 Encoding: UTF-8
 SystemRequirements: C++17
