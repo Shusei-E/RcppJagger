@@ -3,7 +3,7 @@ name: Publish to GitHub Pages when a branch is merged
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   publish:
