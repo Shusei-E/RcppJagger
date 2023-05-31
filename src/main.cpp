@@ -3,6 +3,8 @@
   // comment out the `main()` function in jagger.cc
   // Edit the `_err()` function in `ccedar_core.h` not to use `stderr` and `exit`
   // Edit the `read_model()` function in `jagger.cc` not to use `stderr`
+  // Edit `jagger.h` to use `mman.h` on Windows and comment out `err.h`
+  // Edit `errx` in `jagger.h` and `jagger.cc`
 #include "reader.h"
 #include "pos.h"
 #include "pos_simple.h"
