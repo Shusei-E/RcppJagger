@@ -4,11 +4,16 @@
 #ifndef JAGGER_H
 #define JAGGER_H
 #include <sys/stat.h>
-#include <sys/mman.h>
+#if defined(_MSC_VER) || defined(__MINGW32__)
+ #include "mman.h"
+ #include <windows.h>
+#else
+ #include <sys/mman.h>
+#endif
 #include <unistd.h>
 #include <stdint.h>
 #include <fcntl.h>
-#include <err.h>
+// #include <err.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -63,7 +68,7 @@ static inline int unicode (const char* p, int& b) {
     case 2: return ((p0 & 0x1f) << 6)  |  (p1 & 0x3f);
     case 3: return ((p0 & 0xf)  << 12) | ((p1 & 0x3f) << 6)  |  (p2 & 0x3f);
     case 4: return ((p0 & 0x7)  << 18) | ((p1 & 0x3f) << 12) | ((p2 & 0x3f) << 6)  | (p3 & 0x3f);
-    default: errx (1, "UTF-8 decode error: %s", p);
+    // default: errx (1, "UTF-8 decode error: %s", p);
   }
   return 0;
 }
@@ -118,7 +123,10 @@ private:
   size_t _start, _end, _size, _capacity; // ..._start..._end..._size..._capacity
 public:
   simple_reader (const char* fn = 0, size_t size = BUF_SIZE) : _fd (fn ? ::open (fn, O_RDONLY) : 0), _buf (static_cast <char*> (std::malloc (sizeof (char) * size))), _start (0), _end (0), _size (::read (_fd, _buf, size)), _capacity (size)
-  { if (_fd == -1) std::free (_buf), errx (1, "no such file: %s", fn); }
+  {
+    // if (_fd == -1) std::free (_buf), errx (1, "no such file: %s", fn);
+    if (_fd == -1) std::free (_buf);
+  }
   ~simple_reader () { std::free (_buf); }
   size_t gets (char** line) {
     if (! _size) return 0;

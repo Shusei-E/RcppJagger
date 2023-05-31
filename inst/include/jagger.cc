@@ -65,13 +65,13 @@ namespace jagger {
     template <typename T>
     static inline void write_array (T& data, const std::string& fn) {
       FILE *fp = std::fopen (fn.c_str (), "wb");
-      if (! fp) errx (1, "no such file: %s", fn.c_str ());
+      // if (! fp) errx (1, "no such file: %s", fn.c_str ());
       std::fwrite (&data[0], sizeof (typename T::value_type), data.size (), fp);
       std::fclose (fp);
     }
     void* read_array (const std::string& fn) {
       int fd = ::open (fn.c_str (), O_RDONLY);
-      if (fd == -1) errx (1, "no such file: %s", fn.c_str ());
+      // if (fd == -1) errx (1, "no such file: %s", fn.c_str ());
       // get size and read;
       const size_t size = ::lseek (fd, 0, SEEK_END);
       ::lseek (fd, 0, SEEK_SET);
