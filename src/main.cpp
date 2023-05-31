@@ -5,6 +5,7 @@
   // Edit the `read_model()` function in `jagger.cc` not to use `stderr`
   // Edit `jagger.h` to use `mman.h` on Windows and comment out `err.h`
   // Edit `errx` in `jagger.h` and `jagger.cc`
+  // Edit `write_buffer` in `jagger.cc` to pass Devian check on CRAN
 #include "reader.h"
 #include "pos.h"
 #include "pos_simple.h"
