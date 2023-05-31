@@ -1,0 +1,26 @@
+Package: RcppJagger
+Title: An R wrapper for Jagger
+Version: 0.0.1
+Authors@R: c(
+        person("Shusei", "Eshima", email = "shuseieshima@gmail.com", role = c("aut","cre"), comment = c(ORCID = "0000-0003-3613-4046"))
+    )
+Description: RcppJagger is a wrapper for Jagger, a morphological analyzer proposed in Yoshinaga (2023).
+License: GPL-2
+Encoding: UTF-8
+SystemRequirements: C++17
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+URL: https://shusei-e.github.io/RcppJagger/
+BugReports: https://github.com/Shusei-E/RcppJagger/issues
+LinkingTo:
+    Rcpp
+Imports:
+    cli (>= 3.6.1),
+    purrr (>= 1.0.0),
+    Rcpp (>= 1.0.7),
+    rlang (>= 1.1.0)
+Suggests:
+    dplyr (>= 1.1.0),
+    testthat (>= 3.1.5),
+    tibble
+Config/testthat/edition: 3

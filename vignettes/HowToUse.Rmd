@@ -1,0 +1,150 @@
+---
+title: "利用方法"
+output:
+  html_document:
+    toc: true
+---
+
+## `pos()`と`pos_simple()`
+Rで、以下のようにJaggerを利用できます。
+```{r, warning=FALSE, message=FALSE}
+library(RcppJagger)
+sentence <- "青く青く、澄んでいる。美しい夕空を、ながいこと見つめたから、こんなにいい目になったのかしら。"
+pos(sentence)
+```
+
+エラーが出てRが終了してしまう場合は、[インストール](Installation.html)のStep 6で確認したモデルのパスを指定してください。
+```{r, include = FALSE}
+model_path <- "/usr/local/lib/jagger/model/kwdlc"
+```
+
+以下のように、`model_path`引数を利用することで、モデルのパスを指定できます。
+これは以下の全ての関数に共通です。
+```{r, eval = FALSE, warning=FALSE, message=FALSE}
+model_path <- "/usr/local/lib/jagger/model/kwdlc"
+pos(sentence, model_path = model_path)
+```
+
+`keep`引数を利用することで、結果に含める品詞を指定できます。
+```{r, warning=FALSE, message=FALSE}
+pos(sentence,  keep = c("動詞", "形容詞"))
+```
+
+`pos()`関数は、`list`を返しますが、`list`の各要素を`data.frame`とすることができます。
+```{r, warning=FALSE, message=FALSE}
+pos(sentence, keep = c("動詞", "形容詞"), format = "data.frame")
+```
+
+また、複数の文章を処理することもできます。
+```{r, warning=FALSE, message=FALSE}
+texts <- c(
+  "青く青く、澄んでいる。美しい夕空を、ながいこと見つめたから、こんなにいい目になったのかしら。",
+  "早速その蜘蛛の糸を両手でしっかりとつかみながら、一生懸命に上へ上へとたぐりのぼり始めました。",
+  "二人はそこにすべてを忘れて、感激の涙にむせび合うたのであった。"
+)
+pos(texts, format = "data.frame",  keep = c("動詞", "形容詞"))
+```
+
+詳細な結果が必要ない場合は、`pos_simple()`関数を利用することで、より高速に処理できます。
+```{r, warning=FALSE, message=FALSE}
+pos_simple(sentence)
+```
+`keep`や`format`引数は、`pos_simple()`にも利用できます。
+```{r, warning=FALSE, message=FALSE}
+pos_simple(texts, keep = c("動詞", "形容詞"), format = "data.frame")
+```
+
+
+## `tokenize()`と`lemmatize()`
+RcppJaggerには、`pos()`関数以外にも、以下の関数があります。
+```{r, warning=FALSE, message=FALSE}
+tokenize(sentence)
+lemmatize(sentence)
+```
+`keep`引数は、`tokenize()`と`lemmatize()`にも利用できます。
+また、`concat`引数を利用することで、結果をリストとして返すことができます。
+
+```{r, warning=FALSE, message=FALSE}
+tokenize(sentence, keep = c("動詞", "形容詞"), concat = FALSE)
+lemmatize(sentence,  keep = c("動詞", "形容詞"), concat = FALSE)
+```
+
+これらの関数も複数の文章を処理することもできます。
+```{r, warning=FALSE, message=FALSE}
+tokenize(texts, keep = c("動詞", "形容詞"), concat = TRUE)
+lemmatize(texts,  keep = c("動詞", "形容詞"), concat = FALSE)
+```
+
+
+## `tokenize_tbl()`と`lemmatize_tbl()`
+RcppJaggerには、`tibble`に特化した関数もあります。
+```{r, warning=FALSE, message=FALSE}
+documents <- tibble::tibble(
+  ID = seq_len(length(texts)),
+  text = texts
+)
+t_tbl <- tokenize_tbl(documents, "text")
+l_tbl <- lemmatize_tbl(documents, "text", keep = c("動詞", "名詞"))
+```
+
+`*_tbl()`は、`quanteda`パッケージと組み合わせて使う際に便利です。
+```{r, warning=FALSE, message=FALSE}
+library(quanteda)
+corpus_test <- corpus(l_tbl, text_field = "lemmatized")
+token_test <- tokens(corpus_test)
+dfm_test <- dfm(token_test)
+dfm_test
+```
+
+## 並列化
+`furrr`パッケージを用いることで、並列化することができます。
+以下のコードでは<a href="https://github.com/koheiw/workshop-IJTA" target="_blank">『Rによる日本語のテキスト分析入門』</a>で使用されたデータを用います。
+```{r, eval = FALSE, warning=FALSE, message=FALSE}
+library(furrr)
+library(dplyr)
+nworkers <- 5
+plan(multisession, workers = nworkers)
+
+data <- readr::read_csv(
+  "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi_head.txt",
+  col_names = FALSE
+) %>%
+  rename(text = X1) %>%
+  mutate(ID = row_number()) %>%
+  relocate(ID, text)
+
+nrows <- nrow(data)
+batch_size <- ceiling(nrows / nworkers)
+split_index <- split(1:nrows, ceiling((1:nrows)/batch_size))
+
+# pos
+pos_list_furrr <- future_map(
+  split_index,
+  function(index) {
+    pos(data[index, ][["text"]], keep = c("動詞", "名詞"))
+  },
+  .options = furrr_options(packages = c("RcppJagger", "tibble"), seed = TRUE)
+) %>% unlist(recursive = FALSE, use.names = FALSE)
+pos_list <- pos(data[["text"]], keep = c("動詞", "名詞"))
+identical(pos_list, pos_list_furrr)
+
+# lemmatize_tbl
+l_tbl_furrr <- future_map_dfr(
+  split_index,
+  function(index) {
+    lemmatize_tbl(data[index, ], "text", keep = c("動詞", "名詞"))
+  },
+  .options = furrr_options(packages = c("RcppJagger", "tibble"), seed = TRUE)
+)
+
+l_tbl <- lemmatize_tbl(data, "text", keep = c("動詞", "名詞"))
+identical(l_tbl, l_tbl_furrr)
+```
+
+
+## 注意
+`readr::tokenize()`がRcppJaggerの関数をマスクしてしまうことに気をつけてください。
+`library(tidyverse)`や、`library(readr)`とした際にメッセージが表示されます。
+マスクされた場合は、`RcppJagger::tokenize()`とすることで、RcppJaggerの関数を利用できます。
+
+
