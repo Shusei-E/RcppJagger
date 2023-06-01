@@ -21,6 +21,7 @@ test_that("tokenize_tbl", {
   expect_no_error(tokenize_tbl(sentence_tbl, "sentence"))
   expect_no_error(tokenize_tbl(sentence_tbl, "sentence"))
   expect_no_error(tokenize_tbl(sentence_tbl, "sentence", keep = c("動詞", "名詞")))
+  expect_error(tokenize_tbl(sentence_tbl, "no_exist", keep = c("動詞", "名詞")))
   expect_error(tokenize_tbl(sentence_tbl$sentence, keep = c("動詞", "名詞")))
 })
 

@@ -21,3 +21,12 @@ a list.
 \description{
 An R wrapper for Jagger's tokenizer
 }
+\examples{
+\dontrun{
+ texts <- read.csv(
+   "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
+   sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
+ )
+ tokenize(texts$head)
+}
+}

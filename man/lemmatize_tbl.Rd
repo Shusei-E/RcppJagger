@@ -21,3 +21,12 @@ a vector.
 \description{
 An R wrapper for Jagger's lemmatizer (a tibble input)
 }
+\examples{
+\dontrun{
+ texts <- read.csv(
+   "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
+   sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
+ ) |> tibble::as_tibble()
+ lemmatize_tbl(texts)
+}
+}

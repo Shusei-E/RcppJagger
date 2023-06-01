@@ -18,5 +18,6 @@ test_that("lemmatize_tbl", {
   )
   expect_no_error(lemmatize_tbl(sentence_tbl, "sentence"))
   expect_no_error(lemmatize_tbl(sentence_tbl, "sentence", keep = c("動詞", "名詞")))
+  expect_error(lemmatize_tbl(sentence_tbl, "no_exist", keep = c("動詞", "名詞")))
   expect_error(lemmatize_tbl(sentence_tbl$sentence, keep = c("動詞", "名詞")))
 })

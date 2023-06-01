@@ -21,3 +21,12 @@ a list object.
 \description{
 An R wrapper for Jagger's POS tagger
 }
+\examples{
+\dontrun{
+ texts <- read.csv(
+   "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
+   sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
+ )
+ pos(texts$head)
+}
+}
