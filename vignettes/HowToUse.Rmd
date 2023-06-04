@@ -47,7 +47,7 @@ pos(texts, model_path = model_path, format = "data.frame",  keep = c("動詞", "
 
 詳細な結果が必要ない場合は、`pos_simple()`関数を利用することで、より高速に処理できます。
 ```{r, warning=FALSE, message=FALSE}
-pos_simple(sentence, model_path = model_path,)
+pos_simple(sentence, model_path = model_path)
 ```
 `keep`や`format`引数は、`pos_simple()`にも利用できます。
 ```{r, warning=FALSE, message=FALSE}
