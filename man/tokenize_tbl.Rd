@@ -21,3 +21,7 @@ a tibble.
 \description{
 An R wrapper for Jagger's tokenizer (a tibble input)
 }
+\examples{
+ data(sentence_example)
+ res_tokenize <- tokenize_tbl(tibble::as_tibble(sentence_example), "text")
+}

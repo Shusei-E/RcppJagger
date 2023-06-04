@@ -21,3 +21,7 @@ a vector.
 \description{
 An R wrapper for Jagger's lemmatizer (a tibble input)
 }
+\examples{
+ data(sentence_example)
+ res_lemmatize <- lemmatize_tbl(tibble::as_tibble(sentence_example), "text")
+}

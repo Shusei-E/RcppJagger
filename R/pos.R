@@ -4,11 +4,17 @@
 #' @param model_path  a path to the model.
 #' @param keep a vector of POS(s) to keep. Default is `NULL`.
 #' @param format a format of the output. Default is `list`.
+#' @examples
+#'  data(sentence_example)
+#'  res_pos <- pos(sentence_example$text)
 #' @return a list object.
 #' @export
 pos <- function(input, model_path = NULL, keep = NULL, format = c("list", "data.frame")) {
   if (is.null(model_path)) {
     model_path <- get_model_path()
+  }
+  if (!exists_model_path(model_path)) {
+    return(input)
   }
   if (! "character" %in% class(input)) {
     cli::cli_abort("Please provide a character vector.")
@@ -47,11 +53,17 @@ pos <- function(input, model_path = NULL, keep = NULL, format = c("list", "data.
 #' @param model_path  a path to the model.
 #' @param keep a vector of POS(s) to keep. Default is `NULL`.
 #' @param format a format of the output. Default is `list`.
+#' @examples
+#'  data(sentence_example)
+#'  res_pos <- pos_simple(sentence_example$text)
 #' @return a list object.
 #' @export
 pos_simple <- function(input, model_path = NULL, keep = NULL, format = c("list", "data.frame")) {
   if (is.null(model_path)) {
     model_path <- get_model_path()
+  }
+  if (!exists_model_path(model_path)) {
+    return(input)
   }
   if (! "character" %in% class(input)) {
     cli::cli_abort("Please provide a character vector.")

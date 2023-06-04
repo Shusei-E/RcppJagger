@@ -13,7 +13,7 @@ sentence <- "青く青く、澄んでいる。美しい夕空を、ながいこ�
 pos(sentence)
 ```
 
-エラーが出てRが終了してしまう場合は、[インストール](Installation.html)のStep 6で確認したモデルのパスを指定してください。
+エラーが出てRが終了してしまう場合や、形態素解析が行われない場合は、[インストール](Installation.html)のStep 6で確認したモデルのパスを指定してください。
 ```{r, include = FALSE}
 model_path <- "/usr/local/lib/jagger/model/kwdlc"
 ```
@@ -27,12 +27,12 @@ pos(sentence, model_path = model_path)
 
 `keep`引数を利用することで、結果に含める品詞を指定できます。
 ```{r, warning=FALSE, message=FALSE}
-pos(sentence,  keep = c("動詞", "形容詞"))
+pos(sentence, model_path = model_path, keep = c("動詞", "形容詞"))
 ```
 
 `pos()`関数は、`list`を返しますが、`list`の各要素を`data.frame`とすることができます。
 ```{r, warning=FALSE, message=FALSE}
-pos(sentence, keep = c("動詞", "形容詞"), format = "data.frame")
+pos(sentence, model_path = model_path, keep = c("動詞", "形容詞"), format = "data.frame")
 ```
 
 また、複数の文章を処理することもできます。
@@ -42,37 +42,37 @@ texts <- c(
   "早速その蜘蛛の糸を両手でしっかりとつかみながら、一生懸命に上へ上へとたぐりのぼり始めました。",
   "二人はそこにすべてを忘れて、感激の涙にむせび合うたのであった。"
 )
-pos(texts, format = "data.frame",  keep = c("動詞", "形容詞"))
+pos(texts, model_path = model_path, format = "data.frame",  keep = c("動詞", "形容詞"))
 ```
 
 詳細な結果が必要ない場合は、`pos_simple()`関数を利用することで、より高速に処理できます。
 ```{r, warning=FALSE, message=FALSE}
-pos_simple(sentence)
+pos_simple(sentence, model_path = model_path)
 ```
 `keep`や`format`引数は、`pos_simple()`にも利用できます。
 ```{r, warning=FALSE, message=FALSE}
-pos_simple(texts, keep = c("動詞", "形容詞"), format = "data.frame")
+pos_simple(texts, model_path = model_path, keep = c("動詞", "形容詞"), format = "data.frame")
 ```
 
 
 ## `tokenize()`と`lemmatize()`
 RcppJaggerには、`pos()`関数以外にも、以下の関数があります。
 ```{r, warning=FALSE, message=FALSE}
-tokenize(sentence)
-lemmatize(sentence)
+tokenize(sentence, model_path = model_path)
+lemmatize(sentence, model_path = model_path)
 ```
 `keep`引数は、`tokenize()`と`lemmatize()`にも利用できます。
 また、`concat`引数を利用することで、結果をリストとして返すことができます。
 
 ```{r, warning=FALSE, message=FALSE}
-tokenize(sentence, keep = c("動詞", "形容詞"), concat = FALSE)
-lemmatize(sentence,  keep = c("動詞", "形容詞"), concat = FALSE)
+tokenize(sentence, model_path = model_path, keep = c("動詞", "形容詞"), concat = FALSE)
+lemmatize(sentence, model_path = model_path,  keep = c("動詞", "形容詞"), concat = FALSE)
 ```
 
 これらの関数も複数の文章を処理することもできます。
 ```{r, warning=FALSE, message=FALSE}
-tokenize(texts, keep = c("動詞", "形容詞"), concat = TRUE)
-lemmatize(texts,  keep = c("動詞", "形容詞"), concat = FALSE)
+tokenize(texts, model_path = model_path, keep = c("動詞", "形容詞"), concat = TRUE)
+lemmatize(texts, model_path = model_path,  keep = c("動詞", "形容詞"), concat = FALSE)
 ```
 
 
@@ -83,8 +83,8 @@ documents <- tibble::tibble(
   ID = seq_len(length(texts)),
   text = texts
 )
-t_tbl <- tokenize_tbl(documents, "text")
-l_tbl <- lemmatize_tbl(documents, "text", keep = c("動詞", "名詞"))
+t_tbl <- tokenize_tbl(documents, "text", model_path = model_path)
+l_tbl <- lemmatize_tbl(documents, "text", model_path = model_path, keep = c("動詞", "名詞"))
 ```
 
 `*_tbl()`は、`quanteda`パッケージと組み合わせて使う際に便利です。
@@ -121,7 +121,7 @@ split_index <- split(1:nrows, ceiling((1:nrows)/batch_size))
 pos_list_furrr <- future_map(
   split_index,
   function(index) {
-    pos(data[index, ][["text"]], keep = c("動詞", "名詞"))
+    pos(data[index, ][["text"]], model_path = model_path, keep = c("動詞", "名詞"))
   },
   .options = furrr_options(packages = c("RcppJagger", "tibble"), seed = TRUE)
 ) %>% unlist(recursive = FALSE, use.names = FALSE)
@@ -132,7 +132,7 @@ identical(pos_list, pos_list_furrr)
 l_tbl_furrr <- future_map_dfr(
   split_index,
   function(index) {
-    lemmatize_tbl(data[index, ], "text", keep = c("動詞", "名詞"))
+    lemmatize_tbl(data[index, ], "text", model_path = model_path, keep = c("動詞", "名詞"))
   },
   .options = furrr_options(packages = c("RcppJagger", "tibble"), seed = TRUE)
 )

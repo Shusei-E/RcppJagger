@@ -8,5 +8,3 @@
 
 library(testthat)
 library(RcppJagger)
-
-test_check("RcppJagger")

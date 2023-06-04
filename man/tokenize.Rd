@@ -21,3 +21,7 @@ a list.
 \description{
 An R wrapper for Jagger's tokenizer
 }
+\examples{
+ data(sentence_example)
+ res_tokenize <- tokenize(sentence_example$text)
+}

@@ -49,7 +49,7 @@ class RcppJaggerPOSSimple : public jagger::tagger {
           } else {
             bos = false;
           }
-          store_token(p, static_cast <size_t> (bytes), token_vec);
+          store_token(p, static_cast <size_t> (bytes), token_vec, concat);
         }
         if (! bos) // output fs of last token
           if (POS_TAGGING) {
@@ -72,11 +72,19 @@ class RcppJaggerPOSSimple : public jagger::tagger {
     const char* first_comma = std::find(s, end, ',');
 
     // Store the element
-    pos_vec.emplace_back(s, first_comma);
+    std::string_view element(s, first_comma - s);
+    if(element != "*") {
+        // Store the element
+        pos_vec.emplace_back(element);
+    }
   }
 
-  void store_token(const char* s, size_t len, std::vector<std::string> &token_vec) {
-     token_vec.emplace_back(s, len);
+  void store_token(const char* s, size_t len, std::vector<std::string> &token_vec, bool concat) {
+    if (!concat || token_vec.empty()) {
+      token_vec.emplace_back(s, len);
+    } else { // concat to the previous token
+      token_vec.back().append(s, len);
+    }
   }
 };
 

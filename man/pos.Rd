@@ -21,3 +21,7 @@ a list object.
 \description{
 An R wrapper for Jagger's POS tagger
 }
+\examples{
+ data(sentence_example)
+ res_pos <- pos(sentence_example$text)
+}

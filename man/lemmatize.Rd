@@ -21,3 +21,7 @@ a list.
 \description{
 An R wrapper for Jagger's lemmatizer
 }
+\examples{
+ data(sentence_example)
+ res_lemmatize <- lemmatize(sentence_example$text)
+}
