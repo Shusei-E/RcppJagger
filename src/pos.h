@@ -52,7 +52,7 @@ class RcppJaggerPOS : public jagger::tagger {
           } else {
             bos = false;
           }
-          store_token(p, static_cast <size_t> (bytes), token_vec);
+          store_token(p, static_cast <size_t> (bytes), token_vec, concat);
         }
         if (! bos) // output fs of last token
           if (POS_TAGGING) {
@@ -85,13 +85,23 @@ class RcppJaggerPOS : public jagger::tagger {
     parts.emplace_back(pos_info.substr(start));
 
     // Add thee first part to `pos_vec` and the third-last part to `lemma_vec`.
-    pos_vec.emplace_back(parts[0]);
-    subtype_vec.emplace_back(parts[1]);
-    lemma_vec.emplace_back(parts[parts.size() - 3]);
+    if (parts[0] != "*" && parts.size() >= 7) {  // first appearance of the token (i.e. not a concatenation)
+      pos_vec.emplace_back(parts[0]);
+      subtype_vec.emplace_back(parts[1]);
+      lemma_vec.emplace_back(parts[parts.size() - 3]);
+    } else if (parts[0] != "*" && parts.size() == 4) {  // concatenation
+      pos_vec.emplace_back(parts[0]);
+      subtype_vec.emplace_back(parts[1]);
+      lemma_vec.emplace_back(parts[parts.size() - 1]);
+    }
   }
 
-  void store_token(const char* s, size_t len, std::vector<std::string> &token_vec) {
-     token_vec.emplace_back(s, len);
+  void store_token(const char* s, size_t len, std::vector<std::string> &token_vec, bool concat) {
+    if (!concat || token_vec.empty()) {
+      token_vec.emplace_back(s, len);
+    } else { // concat to the previous token
+      token_vec.back().append(s, len);
+    }
   }
 };
 
