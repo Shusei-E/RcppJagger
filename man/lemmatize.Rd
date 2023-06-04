@@ -22,11 +22,6 @@ a list.
 An R wrapper for Jagger's lemmatizer
 }
 \examples{
-\dontrun{
- texts <- read.csv(
-   "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
-   sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
- )
- lemmatize(texts$head)
-}
+ data(sentence_example)
+ res_lemmatize <- lemmatize(sentence_example$text)
 }

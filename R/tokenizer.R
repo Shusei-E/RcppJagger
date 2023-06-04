@@ -1,4 +1,3 @@
-
 #' An R wrapper for Jagger's tokenizer
 #'
 #' @param input an input.
@@ -7,17 +6,15 @@
 #' @param concat logical. If TRUE, the function returns a concatenated string. Default is `TRUE`.
 #' @return a list.
 #' @examples
-#' \dontrun{
-#'  texts <- read.csv(
-#'    "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
-#'    sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
-#'  )
-#'  tokenize(texts$head)
-#' }
+#'  data(sentence_example)
+#'  res_tokenize <- tokenize(sentence_example$text)
 #' @export
 tokenize <- function(input, model_path = NULL, keep = NULL, concat = TRUE) {
   if (is.null(model_path)) {
     model_path <- get_model_path()
+  }
+  if (!exists_model_path(model_path)) {
+    return(input)
   }
   if (! "character" %in% class(input)) {
     cli::cli_abort("Please provide a character vector.")
@@ -45,17 +42,15 @@ tokenize <- function(input, model_path = NULL, keep = NULL, concat = TRUE) {
 #' @param keep a vector of POS(s) to keep. Default is `NULL`.
 #' @return a tibble.
 #' @examples
-#' \dontrun{
-#'  texts <- read.csv(
-#'    "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
-#'    sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
-#'  ) |> tibble::as_tibble()
-#'  tokenize_tbl(texts)
-#' }
+#'  data(sentence_example)
+#'  res_tokenize <- tokenize_tbl(tibble::as_tibble(sentence_example), "text")
 #' @export
 tokenize_tbl <- function(tbl, column, model_path = NULL, keep = NULL) {
   if (is.null(model_path)) {
     model_path <- get_model_path()
+  }
+  if (!exists_model_path(model_path)) {
+    return(tbl)
   }
   if (! "tbl_df" %in% class(tbl)) {
     cli::cli_abort("Please provide a tibble object.")

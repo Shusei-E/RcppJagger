@@ -7,6 +7,7 @@ Authors@R: c(
     )
 Description: A wrapper for Jagger, a morphological analyzer proposed in Yoshinaga (2023) <arXiv:2305.19045>. Jagger uses patterns derived from morphological dictionaries and training data sets and applies them from the beginning of the input. This simultaneous and deterministic process enables it to effectively perform tokenization, POS tagging, and lemmatization.
 License: GPL-2
+Depends: R (>= 4.0)
 Encoding: UTF-8
 SystemRequirements: C++17
 Roxygen: list(markdown = TRUE)
@@ -25,3 +26,4 @@ Suggests:
     testthat (>= 3.1.5),
     tibble
 Config/testthat/edition: 3
+LazyData: TRUE

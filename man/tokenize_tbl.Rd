@@ -22,11 +22,6 @@ a tibble.
 An R wrapper for Jagger's tokenizer (a tibble input)
 }
 \examples{
-\dontrun{
- texts <- read.csv(
-   "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
-   sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
- ) |> tibble::as_tibble()
- tokenize_tbl(texts)
-}
+ data(sentence_example)
+ res_tokenize <- tokenize_tbl(tibble::as_tibble(sentence_example), "text")
 }

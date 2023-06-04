@@ -27,11 +27,6 @@ a list object.
 An R wrapper for Jagger's POS tagger (only returning POS)
 }
 \examples{
-\dontrun{
- texts <- read.csv(
-   "https://raw.githubusercontent.com/koheiw/workshop-IJTA/master/data/asahi.csv",
-   sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8"
- )
- pos_simple(texts$head)
-}
+ data(sentence_example)
+ res_pos <- pos_simple(sentence_example$text)
 }
