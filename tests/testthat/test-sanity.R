@@ -2,7 +2,7 @@
 
 test_that("pos-pos_simple", {
   skip_on_cran(); skip_on_os(c("windows", "linux", "sloaris"))
-  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。"
+  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。零時五十分予鈴。"
   sentences <- c(sentence, "2つ目の文章を追加します。")
 
   expect_identical(pos(sentence)[[1]]$token, pos_simple(sentence)[[1]]$token)
@@ -17,7 +17,7 @@ test_that("pos-pos_simple", {
 
 test_that("pos-lemmatize", {
   skip_on_cran(); skip_on_os(c("windows", "linux", "sloaris"))
-  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。"
+  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。零時五十分予鈴。"
   sentences <- c(sentence, "2つ目の文章を追加します。")
 
   expect_identical(pos(sentence)[[1]]$lemma, lemmatize(sentence, concat = FALSE)[[1]])
@@ -27,7 +27,7 @@ test_that("pos-lemmatize", {
 
 test_that("pos-tokenize", {
   skip_on_cran(); skip_on_os(c("windows", "linux", "sloaris"))
-  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。"
+  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。零時五十分予鈴。"
   sentences <- c(sentence, "12の文章を追加します。")
 
   expect_identical(pos(sentence)[[1]]$token, tokenize(sentence, concat = FALSE)[[1]])
