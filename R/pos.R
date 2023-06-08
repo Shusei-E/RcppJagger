@@ -21,18 +21,14 @@ pos <- function(input, model_path = NULL, keep = NULL, format = c("list", "data.
   }
   format <- rlang::arg_match(format)
 
-  result <- pos_cpp_vec(input, model_path)
-
-  if (!is.null(keep)) {
-    result <- purrr::map(result, function(x) {
-      idx <- x$pos %in% keep
-      x$token <- x$token[idx]
-      x$lemma <- x$lemma[idx]
-      x$subtype <- x$subtype[idx]
-      x$pos <- x$pos[idx]
-      return(x)
-    })
+  if (is.null(keep)) {
+    keep_all <- TRUE
+    keep <- c("")
+  } else {
+    keep_all <- FALSE
   }
+
+  result <- pos_cpp_vec(input, model_path, keep, keep_all)
 
   if (format == "data.frame") {
     result <- purrr::map(result, function(x) {
@@ -70,16 +66,15 @@ pos_simple <- function(input, model_path = NULL, keep = NULL, format = c("list",
   }
 
   format <- rlang::arg_match(format)
-  result <- pos_simple_cpp_vec(input, model_path)
 
-  if (!is.null(keep)) {
-    result <- purrr::map(result, function(x) {
-      idx <- x$pos %in% keep
-      x$token <- x$token[idx]
-      x$pos <- x$pos[idx]
-      return(x)
-    })
+  if (is.null(keep)) {
+    keep_all <- TRUE
+    keep <- c("")
+  } else {
+    keep_all <- FALSE
   }
+
+  result <- pos_simple_cpp_vec(input, model_path, keep, keep_all)
 
   if (format == "data.frame") {
     result <- purrr::map(result, function(x) {

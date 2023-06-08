@@ -11,26 +11,30 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // pos_cpp_vec
-List pos_cpp_vec(StringVector& inputs, std::string model_path);
-RcppExport SEXP _RcppJagger_pos_cpp_vec(SEXP inputsSEXP, SEXP model_pathSEXP) {
+List pos_cpp_vec(StringVector& inputs, std::string model_path, StringVector& keep_vec, bool keep_all);
+RcppExport SEXP _RcppJagger_pos_cpp_vec(SEXP inputsSEXP, SEXP model_pathSEXP, SEXP keep_vecSEXP, SEXP keep_allSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< StringVector& >::type inputs(inputsSEXP);
     Rcpp::traits::input_parameter< std::string >::type model_path(model_pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(pos_cpp_vec(inputs, model_path));
+    Rcpp::traits::input_parameter< StringVector& >::type keep_vec(keep_vecSEXP);
+    Rcpp::traits::input_parameter< bool >::type keep_all(keep_allSEXP);
+    rcpp_result_gen = Rcpp::wrap(pos_cpp_vec(inputs, model_path, keep_vec, keep_all));
     return rcpp_result_gen;
 END_RCPP
 }
 // pos_simple_cpp_vec
-List pos_simple_cpp_vec(StringVector& inputs, std::string model_path);
-RcppExport SEXP _RcppJagger_pos_simple_cpp_vec(SEXP inputsSEXP, SEXP model_pathSEXP) {
+List pos_simple_cpp_vec(StringVector& inputs, std::string model_path, StringVector& keep_vec, bool keep_all);
+RcppExport SEXP _RcppJagger_pos_simple_cpp_vec(SEXP inputsSEXP, SEXP model_pathSEXP, SEXP keep_vecSEXP, SEXP keep_allSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< StringVector& >::type inputs(inputsSEXP);
     Rcpp::traits::input_parameter< std::string >::type model_path(model_pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(pos_simple_cpp_vec(inputs, model_path));
+    Rcpp::traits::input_parameter< StringVector& >::type keep_vec(keep_vecSEXP);
+    Rcpp::traits::input_parameter< bool >::type keep_all(keep_allSEXP);
+    rcpp_result_gen = Rcpp::wrap(pos_simple_cpp_vec(inputs, model_path, keep_vec, keep_all));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -64,8 +68,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RcppJagger_pos_cpp_vec", (DL_FUNC) &_RcppJagger_pos_cpp_vec, 2},
-    {"_RcppJagger_pos_simple_cpp_vec", (DL_FUNC) &_RcppJagger_pos_simple_cpp_vec, 2},
+    {"_RcppJagger_pos_cpp_vec", (DL_FUNC) &_RcppJagger_pos_cpp_vec, 4},
+    {"_RcppJagger_pos_simple_cpp_vec", (DL_FUNC) &_RcppJagger_pos_simple_cpp_vec, 4},
     {"_RcppJagger_tokenize_cpp_vec", (DL_FUNC) &_RcppJagger_tokenize_cpp_vec, 4},
     {"_RcppJagger_lemmatize_cpp_vec", (DL_FUNC) &_RcppJagger_lemmatize_cpp_vec, 4},
     {NULL, NULL, 0}

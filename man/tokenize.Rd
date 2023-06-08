@@ -16,7 +16,7 @@ tokenize(input, model_path = NULL, keep = NULL, concat = TRUE)
 \item{concat}{logical. If TRUE, the function returns a concatenated string. Default is \code{TRUE}.}
 }
 \value{
-a list.
+a vector (if \code{concat = TRUE}) or a list (if \code{concat = FALSE}).
 }
 \description{
 An R wrapper for Jagger's tokenizer

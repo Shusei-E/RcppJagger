@@ -4,15 +4,15 @@
 #' POS tagging in C++
 #'
 #' @keywords internal
-pos_cpp_vec <- function(inputs, model_path) {
-    .Call('_RcppJagger_pos_cpp_vec', PACKAGE = 'RcppJagger', inputs, model_path)
+pos_cpp_vec <- function(inputs, model_path, keep_vec, keep_all) {
+    .Call('_RcppJagger_pos_cpp_vec', PACKAGE = 'RcppJagger', inputs, model_path, keep_vec, keep_all)
 }
 
 #' POS tagging in C++ (only token and pos)
 #'
 #' @keywords internal
-pos_simple_cpp_vec <- function(inputs, model_path) {
-    .Call('_RcppJagger_pos_simple_cpp_vec', PACKAGE = 'RcppJagger', inputs, model_path)
+pos_simple_cpp_vec <- function(inputs, model_path, keep_vec, keep_all) {
+    .Call('_RcppJagger_pos_simple_cpp_vec', PACKAGE = 'RcppJagger', inputs, model_path, keep_vec, keep_all)
 }
 
 #' Tokenizer (a vector input)

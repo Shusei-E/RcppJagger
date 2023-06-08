@@ -4,7 +4,7 @@
 #' @param model_path  a path to the model.
 #' @param keep a vector of POS(s) to keep. Default is `NULL`.
 #' @param concat logical. If TRUE, the function returns a concatenated string. Default is `TRUE`.
-#' @return a list.
+#' @return a vector (if `concat = TRUE`) or a list (if `concat = FALSE`).
 #' @examples
 #'  data(sentence_example)
 #'  res_lemmatize <- lemmatize(sentence_example$text)
@@ -40,7 +40,7 @@ lemmatize <- function(input, model_path = NULL, keep = NULL, concat = TRUE) {
 #' @param column a column name of the tibble to tokenize.
 #' @param model_path  a path to the model.
 #' @param keep a vector of POS(s) to keep. Default is `NULL`.
-#' @return a vector.
+#' @return a tibble.
 #' @examples
 #'  data(sentence_example)
 #'  res_lemmatize <- lemmatize_tbl(tibble::as_tibble(sentence_example), "text")

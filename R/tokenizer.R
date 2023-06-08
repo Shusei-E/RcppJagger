@@ -4,7 +4,7 @@
 #' @param model_path  a path to the model.
 #' @param keep a vector of POS(s) to keep. Default is `NULL`.
 #' @param concat logical. If TRUE, the function returns a concatenated string. Default is `TRUE`.
-#' @return a list.
+#' @return a vector (if `concat = TRUE`) or a list (if `concat = FALSE`).
 #' @examples
 #'  data(sentence_example)
 #'  res_tokenize <- tokenize(sentence_example$text)
