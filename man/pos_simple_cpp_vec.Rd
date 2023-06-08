@@ -4,7 +4,7 @@
 \alias{pos_simple_cpp_vec}
 \title{POS tagging in C++ (only token and pos)}
 \usage{
-pos_simple_cpp_vec(inputs, model_path)
+pos_simple_cpp_vec(inputs, model_path, keep_vec, keep_all)
 }
 \description{
 POS tagging in C++ (only token and pos)

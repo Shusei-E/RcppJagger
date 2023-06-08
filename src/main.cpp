@@ -18,7 +18,7 @@ using namespace Rcpp;
 //'
 //' @keywords internal
 // [[Rcpp::export]]
-List pos_cpp_vec(StringVector &inputs, std::string model_path) {
+List pos_cpp_vec(StringVector &inputs, std::string model_path, StringVector &keep_vec, bool keep_all) {
   model_path += "/patterns";
   std::string model (model_path);
 
@@ -29,16 +29,38 @@ List pos_cpp_vec(StringVector &inputs, std::string model_path) {
   std::vector<List> result;
   result.reserve(inputs_size);
 
+  int keep_num = keep_vec.size();
+  std::unordered_set<std::string> keep;
+  for (int i = 0; i < keep_num; i++) {
+    std::string keep_str = Rcpp::as< std::string >(keep_vec[i]);
+    keep.insert(keep_str);
+  }
+
   for (int i = 0; i < inputs_size; i++) {
     std::vector<std::string> token_vec, pos_vec, subtype_vec, lemma_vec;
 
     jagger.pos <BUF_SIZE, true> (Rcpp::as< std::string >(inputs[i]), token_vec, pos_vec, subtype_vec, lemma_vec);
 
+    std::vector<std::string> kept_token_vec, kept_pos_vec, kept_subtype_vec, kept_lemma_vec;
+    kept_token_vec.reserve(token_vec.size());
+    kept_pos_vec.reserve(pos_vec.size());
+    kept_subtype_vec.reserve(subtype_vec.size());
+    kept_lemma_vec.reserve(lemma_vec.size());
+
+    for (size_t j = 0; j < pos_vec.size(); ++j) {
+      if (keep_all || keep.find(pos_vec[j]) != keep.end()) {
+        kept_token_vec.push_back(token_vec[j]);
+        kept_pos_vec.push_back(pos_vec[j]);
+        kept_subtype_vec.push_back(subtype_vec[j]);
+        kept_lemma_vec.push_back(lemma_vec[j]);
+      }
+    }
+
     List result_input;
-    result_input["token"] = wrap(token_vec);
-    result_input["pos"] = wrap(pos_vec);
-    result_input["subtype"] = wrap(subtype_vec);
-    result_input["lemma"] = wrap(lemma_vec);
+    result_input["token"] = wrap(kept_token_vec);
+    result_input["pos"] = wrap(kept_pos_vec);
+    result_input["subtype"] = wrap(kept_subtype_vec);
+    result_input["lemma"] = wrap(kept_lemma_vec);
 
     result.push_back(result_input);
   }
@@ -51,7 +73,7 @@ List pos_cpp_vec(StringVector &inputs, std::string model_path) {
 //'
 //' @keywords internal
 // [[Rcpp::export]]
-List pos_simple_cpp_vec(StringVector &inputs, std::string model_path) {
+List pos_simple_cpp_vec(StringVector &inputs, std::string model_path, StringVector &keep_vec, bool keep_all) {
   model_path += "/patterns";
   std::string model (model_path);
 
@@ -62,16 +84,34 @@ List pos_simple_cpp_vec(StringVector &inputs, std::string model_path) {
   std::vector<List> result;
   result.reserve(inputs_size);
 
+  int keep_num = keep_vec.size();
+  std::unordered_set<std::string> keep;
+  for (int i = 0; i < keep_num; i++) {
+    std::string keep_str = Rcpp::as< std::string >(keep_vec[i]);
+    keep.insert(keep_str);
+  }
+
   for (int i = 0; i < inputs_size; i++) {
     std::vector<std::string> token_vec, pos_vec;
 
     jagger.pos <BUF_SIZE, true> (Rcpp::as< std::string >(inputs[i]), token_vec, pos_vec);
 
-    List result_input_list;
-    result_input_list["token"] = wrap(token_vec);
-    result_input_list["pos"] = wrap(pos_vec);
+    std::vector<std::string> kept_token_vec, kept_pos_vec;
+    kept_token_vec.reserve(token_vec.size());
+    kept_pos_vec.reserve(pos_vec.size());
 
-    result.push_back(result_input_list);
+    for (size_t j = 0; j < pos_vec.size(); ++j) {
+      if (keep_all || keep.find(pos_vec[j]) != keep.end()) {
+        kept_token_vec.push_back(token_vec[j]);
+        kept_pos_vec.push_back(pos_vec[j]);
+      }
+    }
+
+    List result_input;
+    result_input["token"] = wrap(kept_token_vec);
+    result_input["pos"] = wrap(kept_pos_vec);
+
+    result.push_back(result_input);
   }
 
   return wrap(result);
@@ -89,10 +129,10 @@ StringVector tokenize_cpp_vec(StringVector &inputs, std::string model_path, Stri
   jagger.read_model (model);
 
   int keep_num = keep_vec.size();
-  std::vector<std::string> keep;
-  keep.reserve(keep_num);
+  std::unordered_set<std::string> keep;
   for (int i = 0; i < keep_num; i++) {
-    keep[i] = keep_vec[i];
+    std::string keep_str = Rcpp::as< std::string >(keep_vec[i]);
+    keep.insert(keep_str);
   }
 
   int inputs_size = inputs.size();
@@ -106,21 +146,11 @@ StringVector tokenize_cpp_vec(StringVector &inputs, std::string model_path, Stri
     std::stringstream res_str;
     int token_size = token_vec.size();
     for (int j = 0; j < token_size; j++) {
-      if (keep_all) {
-        if (j != 0) {
+      if (keep_all || keep.find(pos_vec[j]) != keep.end()) {
+        if (!res_str.str().empty()) {
           res_str << " ";
         }
         res_str << token_vec[j];
-      } else {
-        for (int k = 0; k < keep_num; k++) {
-          if (pos_vec[j] == keep[k]) {
-            if (!res_str.str().empty()) {
-              res_str << " ";
-            }
-            res_str << token_vec[j];
-            break;
-          }
-        }
       }
     }
     result_vec[i] = res_str.str();
@@ -141,10 +171,10 @@ StringVector lemmatize_cpp_vec(StringVector &inputs, std::string model_path, Str
   jagger.read_model (model);
 
   int keep_num = keep_vec.size();
-  std::vector<std::string> keep;
-  keep.reserve(keep_num);
+  std::unordered_set<std::string> keep;
   for (int i = 0; i < keep_num; i++) {
-    keep[i] = keep_vec[i];
+    std::string keep_str = Rcpp::as< std::string >(keep_vec[i]);
+    keep.insert(keep_str);
   }
 
   int inputs_size = inputs.size();
@@ -158,21 +188,11 @@ StringVector lemmatize_cpp_vec(StringVector &inputs, std::string model_path, Str
     std::stringstream res_str;
     int lemma_size = lemma_vec.size();
     for (int j = 0; j < lemma_size; j++) {
-      if (keep_all) {
-        if (j != 0) {
+      if (keep_all || keep.find(pos_vec[j]) != keep.end()) {
+        if (!res_str.str().empty()) {
           res_str << " ";
         }
         res_str << lemma_vec[j];
-      } else {
-        for (int k = 0; k < keep_num; k++) {
-          if (pos_vec[j] == keep[k]) {
-            if (!res_str.str().empty()) {
-              res_str << " ";
-            }
-            res_str << lemma_vec[j];
-            break;
-          }
-        }
       }
     }
     result_vec[i] = res_str.str();

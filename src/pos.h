@@ -85,7 +85,8 @@ class RcppJaggerPOS : public jagger::tagger {
     parts.emplace_back(pos_info.substr(start));
 
     // Add thee first part to `pos_vec` and the third-last part to `lemma_vec`.
-    if (parts[0] != "*" && parts.size() >= 7) {  // first appearance of the token (i.e. not a concatenation)
+    // Rcout << pos_info << " " << parts.size() << "\n";
+    if (parts[0] != "*" && parts.size() >= 6) {  // first appearance of the token (i.e. not a concatenation)  (Some POS have `*.*`, e.g. "零時五十分予鈴。")
       pos_vec.emplace_back(parts[0]);
       subtype_vec.emplace_back(parts[1]);
       lemma_vec.emplace_back(parts[parts.size() - 3]);

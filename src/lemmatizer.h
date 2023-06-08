@@ -81,7 +81,7 @@ class RcppJaggerLemmatize : public jagger::tagger {
     // Add the final part after the last comma to `parts`.
     parts.emplace_back(pos_info.substr(start));
 
-    if (parts[0] != "*" && parts.size() >= 7) {  // first appearance of the token (i.e. not a concatenation)
+    if (parts[0] != "*" && parts.size() >= 6) {  // first appearance of the token (i.e. not a concatenation)
       pos_vec.emplace_back(parts[0]);
       lemma_vec.emplace_back(parts[parts.size() - 3]);
     } else if (parts[0] != "*" && parts.size() == 4) {  // concatenation

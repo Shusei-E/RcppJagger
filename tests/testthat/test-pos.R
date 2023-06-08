@@ -1,6 +1,6 @@
 test_that("pos", {
   skip_on_cran(); skip_on_os(c("windows", "linux", "sloaris"))
-  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。"
+  sentence <- "日本語の文章の形態素解析を実験しています。\nこれが百二十五文目です。零時五十分予鈴。"
   expect_no_error(pos(sentence))
   expect_no_error(pos(sentence, format = "data.frame"))
   expect_error(pos(sentence, format = "tibble"))

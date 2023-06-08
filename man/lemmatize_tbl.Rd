@@ -16,7 +16,7 @@ lemmatize_tbl(tbl, column, model_path = NULL, keep = NULL)
 \item{keep}{a vector of POS(s) to keep. Default is \code{NULL}.}
 }
 \value{
-a vector.
+a tibble.
 }
 \description{
 An R wrapper for Jagger's lemmatizer (a tibble input)
