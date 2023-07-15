@@ -142,27 +142,27 @@
 <tbody>
 <tr class="odd">
 <td align="left">RcppJagger</td>
-<td align="left">0.82 s</td>
-<td align="left">0.83 s</td>
-<td align="left">0.90 s</td>
-<td align="left">0.83 s</td>
-<td align="left">0.86 s</td>
-<td align="left">1.39 s</td>
+<td align="left">0.85 s</td>
+<td align="left">0.88 s</td>
+<td align="left">1.04 s</td>
+<td align="left">0.89 s</td>
+<td align="left">1.08 s</td>
+<td align="left">1.51 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">RMeCab</td>
-<td align="left">4.70 s</td>
-<td align="left">4.73 s</td>
-<td align="left">4.91 s</td>
-<td align="left">4.81 s</td>
-<td align="left">4.86 s</td>
-<td align="left">5.98 s</td>
+<td align="left">4.69 s</td>
+<td align="left">4.80 s</td>
+<td align="left">5.17 s</td>
+<td align="left">4.88 s</td>
+<td align="left">5.03 s</td>
+<td align="left">7.13 s</td>
 <td align="right">10</td>
 </tr>
 </tbody>
 </table>
-<p>中央値での比較では、<code>RcppJagger</code>の方が<code>RMeCab</code>よりも約5.76倍速いことがわかります。
+<p>中央値での比較では、<code>RcppJagger</code>の方が<code>RMeCab</code>よりも約5.5倍速いことがわかります。
 実装上の工夫をすることで、更なる高速化を期待できます。</p>
 </div>
 <div class="section level2">
@@ -222,82 +222,82 @@
 <tbody>
 <tr class="odd">
 <td align="left">pos</td>
-<td align="left">1.99 s</td>
-<td align="left">2.01 s</td>
-<td align="left">2.02 s</td>
-<td align="left">2.02 s</td>
-<td align="left">2.02 s</td>
-<td align="left">2.06 s</td>
+<td align="left">2.03 s</td>
+<td align="left">2.16 s</td>
+<td align="left">2.16 s</td>
+<td align="left">2.16 s</td>
+<td align="left">2.19 s</td>
+<td align="left">2.24 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">pos_simple</td>
-<td align="left">0.84 s</td>
-<td align="left">0.85 s</td>
-<td align="left">0.85 s</td>
-<td align="left">0.85 s</td>
-<td align="left">0.86 s</td>
 <td align="left">0.87 s</td>
+<td align="left">0.92 s</td>
+<td align="left">0.94 s</td>
+<td align="left">0.95 s</td>
+<td align="left">0.96 s</td>
+<td align="left">0.99 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="odd">
 <td align="left">tokenize</td>
-<td align="left">0.21 s</td>
-<td align="left">0.22 s</td>
-<td align="left">0.22 s</td>
+<td align="left">0.20 s</td>
 <td align="left">0.22 s</td>
 <td align="left">0.23 s</td>
+<td align="left">0.23 s</td>
+<td align="left">0.24 s</td>
 <td align="left">0.24 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">tokenize2</td>
 <td align="left">0.30 s</td>
-<td align="left">0.30 s</td>
-<td align="left">0.32 s</td>
 <td align="left">0.31 s</td>
-<td align="left">0.32 s</td>
-<td align="left">0.36 s</td>
+<td align="left">0.33 s</td>
+<td align="left">0.33 s</td>
+<td align="left">0.34 s</td>
+<td align="left">0.38 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="odd">
 <td align="left">tokenize_tbl</td>
 <td align="left">0.21 s</td>
 <td align="left">0.21 s</td>
-<td align="left">0.22 s</td>
-<td align="left">0.22 s</td>
 <td align="left">0.23 s</td>
 <td align="left">0.24 s</td>
+<td align="left">0.24 s</td>
+<td align="left">0.25 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">lemmatize</td>
 <td align="left">0.57 s</td>
 <td align="left">0.58 s</td>
-<td align="left">0.59 s</td>
-<td align="left">0.59 s</td>
+<td align="left">0.60 s</td>
 <td align="left">0.59 s</td>
 <td align="left">0.60 s</td>
+<td align="left">0.63 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="odd">
 <td align="left">lemmatize2</td>
+<td align="left">0.64 s</td>
 <td align="left">0.66 s</td>
-<td align="left">0.68 s</td>
-<td align="left">0.69 s</td>
-<td align="left">0.69 s</td>
+<td align="left">0.70 s</td>
 <td align="left">0.71 s</td>
 <td align="left">0.73 s</td>
+<td align="left">0.75 s</td>
 <td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">lemmatize_tbl</td>
+<td align="left">0.57 s</td>
 <td align="left">0.58 s</td>
-<td align="left">0.58 s</td>
-<td align="left">0.59 s</td>
-<td align="left">0.59 s</td>
 <td align="left">0.60 s</td>
-<td align="left">0.61 s</td>
+<td align="left">0.60 s</td>
+<td align="left">0.62 s</td>
+<td align="left">0.63 s</td>
 <td align="right">10</td>
 </tr>
 </tbody>
