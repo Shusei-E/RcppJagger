@@ -91,7 +91,7 @@ l_tbl <- lemmatize_tbl(documents, "text", model_path = model_path, keep = c("動
 ```{r, warning=FALSE, message=FALSE}
 library(quanteda)
 corpus_test <- corpus(l_tbl, text_field = "lemmatized")
-token_test <- tokens(corpus_test)
+token_test <- tokens(corpus_test, what = "fastestword")
 dfm_test <- dfm(token_test)
 dfm_test
 ```
